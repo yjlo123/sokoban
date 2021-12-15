@@ -52,6 +52,10 @@ let runtimeCanvas = function() {
 		blockSize = Math.floor(width / widthInBlocks);
 	}
 
+	function drawImg(ctx, image, x, y) {
+		ctx.drawImage(image, x * blockSize, y * blockSize, blockSize, blockSize);
+	}
+
 	function drawPixel(x, y, value) {
 		if (x > widthInBlocks || x < 0 || y > heightInBlocks || y < 0) {
 			return;
@@ -62,17 +66,21 @@ let runtimeCanvas = function() {
 		ctx.fillStyle = colors[parseInt(value)];
 
         if (value === 3) {
-            ctx.drawImage(crateImg, x * blockSize, y * blockSize, blockSize, blockSize);
+			// crate
+			drawImg(ctx, crateImg, x, y)
         } else if (value === 8) {
-            ctx.drawImage(characterImg, x * blockSize, y * blockSize, blockSize, blockSize);
+			// character
+			drawImg(ctx, characterImg, x, y)
         } else if (value === 12) {
+			// target
             ctx.fillStyle = colors[13];
             ctx.fillRect(x * blockSize, y * blockSize, blockSize, blockSize);
             ctx.globalAlpha = 0.2;
-            ctx.drawImage(crossImg, x * blockSize, y * blockSize, blockSize, blockSize);
+			drawImg(ctx, crossImg, x, y)
             ctx.globalAlpha = 1;
         } else if (value === 2) {
-            ctx.drawImage(crateGreenImg, x * blockSize, y * blockSize, blockSize, blockSize);
+			// crate on target
+			drawImg(ctx, crateGreenImg, x, y)
         } else {
             ctx.fillRect(x * blockSize, y * blockSize, blockSize, blockSize);
         }
