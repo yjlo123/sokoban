@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="chrome=1">
+	<title>Sokoban</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	<link rel="icon" href="https://siwei.dev/favicon.gif">
+
+	<script src="https://runtime.siwei.dev/ui/main/jquery-1.12.4.js"></script>
+	<link rel="stylesheet" href="./css/style.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+	<div class="wrapper">
+		<h1>Sokoban</h1>
+		<div class="canvas-view">
+			<canvas id='runtime-canvas' class='runtime-canvas' width="500" height="500"></canvas>
+		</div>
+		
+		<div id="text-output"></div>
+
+		<div class="levels"></div>
+
+		<div class="game-info">
+			<p>This game is written in <a href="https://github.com/yjlo123/runtime-script" target="_blank">Runtime Script</a>.</p>
+			<p>View source code <a href="https://runtime.siwei.dev/?src=sokoban" target="_blank">here</a>.</p>
+		</div>
+		<footer>
+			<small>&copy; Copyright <span id="year"></span> <a href="https://liusiwei.com">liusiwei.com</a></small>
+		</footer>
+	</div>
+	<script src="https://runtime.siwei.dev/src/parser.js"></script>
+	<script src="https://runtime.siwei.dev/src/evaluator.js"></script>
+	<script src="https://runtime.siwei.dev/src/executer.js"></script>
+	<script src="https://runtime.siwei.dev/runtime.js"></script>
+	<script src="./js/canvas.js"></script>
+	<script src="./js/source.js"></script>
+	<script src="./js/levels.js"></script>
+
+<script>document.getElementById("year").innerHTML = new Date().getFullYear();</script>
+
+<script>
+let runtime = runtimeExecuter();
+let canvas = runtimeCanvas();
+canvas.init($('#runtime-canvas')[0]);
+let evaluator = runtimeEvaluator();
+let parser = runtimeParser();
+
+let textOutput = {
+	Write: (text, style) => {$("#text-output").text(text);},
+	AbortInput: ()=>{}
+}
+
+runtime.config(parser, evaluator, null, textOutput, canvas, {});
+
+levels.forEach((level, i) => {
+	let btn = $(`<div class="level-btn">Level ${i+1}</div>`);
+	btn.click(function(){
+		$("#text-output").text(`Level ${i+1}`);
+		runtime.restart();
+		runtime.executeAll({in: levels[i]}, sokobanSrc);
+	});
+	$(".levels").append(btn);
+});
+
+window.addEventListener("keydown", function(e) {
+    if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+    	// prevent scroll
+        e.preventDefault();
+    }
+}, false);
+
+</script>
+
+</body>
+</html>
